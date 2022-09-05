@@ -37,19 +37,29 @@ router.post('/register', async (req, res) => {
 })
 
 router.post("/login", async (req, res) => {
+    console.log(req.body.password , 'this is password');
+  
     const user = await User.findOne({ email: req.body.email })
     if (!user) return res.status(404).json({ message: "user not found" })
-    if (!await bcrypt.compare(req.body.password, user.password)) return res.status(400).json({ message: "invalid password" });
-    const token = jwt.sign({ id: user._id }, "secret")
-    
-    res.cookie('jwt', token , {
-        httpOnly: true, 
-        maxAge : 24 * 60 * 60 * 1000 
-    })
 
-    res.json({
-        message : 'success'
-    })
+     bcrypt.compare(req.body.password, user.password, (err, isMatch) => {
+       if (err) console.log(err);
+       if (!isMatch) return res.status(422).json({ msg: "invalid password"});
+
+       const token = jwt.sign({ id: user._id }, "secret");
+
+       res.cookie("jwt", token, {
+         httpOnly: true,
+         maxAge: 24 * 60 * 60 * 1000,
+         sameSite: "strict",
+         secure: process.env.NODE_ENV === "production" ? true : false,
+       });
+       res.json({
+         message: "success",
+       });
+     });
+       
+
 })
 
 router.get("/list", async (req, res) => {
@@ -63,8 +73,10 @@ router.get("/list", async (req, res) => {
     })
     const user = await User.findOne({ _id: claims.id })
 
-    const { password, ...data } = await user.toJSON();
-     res.json(data);
+        const { password, ...data } = await user.toJSON();
+         
+      //  res.json({ data, user :'ali'});
+    res.json({ user :  data });
 
 
     }catch (e) {

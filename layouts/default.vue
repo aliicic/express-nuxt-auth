@@ -98,6 +98,16 @@ export default {
       fixed: false,
       items: [
         {
+          icon: 'mdi-account',
+          title: 'Login',
+          to: '/login'
+        },
+        {
+          icon: 'mdi-account-plus',
+          title: 'Register',
+          to: '/register'
+        },
+        {
           icon: 'mdi-apps',
           title: 'Welcome',
           to: '/'

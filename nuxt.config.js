@@ -1,4 +1,4 @@
-import colors from 'vuetify/es5/util/colors'
+import colors from "vuetify/es5/util/colors";
 
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -35,9 +35,58 @@ export default {
     "@nuxtjs/axios",
     // https://go.nuxtjs.dev/pwa
     "@nuxtjs/pwa",
+    "@nuxtjs/auth-next",
   ],
 
- 
+  router: {
+    // middleware: ["auth"],
+  },
+
+  auth: {
+    strategies: {
+      //local: false,
+      cookie: {
+        // cookie: {
+        //   // (optional) If set, we check this cookie existence for loggedIn check
+        //   name: "jwt",
+        // },
+        // token: {
+        //   property: "token",
+        //   global: true,
+        //   required: true,
+        //   type: "Bearer",
+        // },
+        // user: {
+        //   property: "data",
+        //   // autoFetch: true
+        // },
+        endpoints: {
+          login: {
+            url: "/api/users/login",
+            method: "post",
+            // propertyName: "token",
+            withCredentials: true,
+          },
+          logout: {
+            url: "/api/users/logout",
+            method: "post",
+            withCredentials: true,
+          },
+          user: {
+            url: "/api/users/list",
+            method: "get",
+            withCredentials: true,
+            //  propertyName: "user",
+          },
+        },
+              tokenRequired: true,
+        tokenType: '',
+        globalToken: true,
+        autoFetchUser: true
+      },
+    },
+  },
+
   serverMiddleware: {
     "/api": "~/api",
   },
@@ -58,23 +107,23 @@ export default {
   vuetify: {
     customVariables: ["~/assets/variables.scss"],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
-        dark: {
-          primary: colors.blue.darken2,
-          accent: colors.grey.darken3,
-          secondary: colors.amber.darken3,
-          info: colors.teal.lighten1,
-          warning: colors.amber.base,
-          error: colors.deepOrange.accent4,
-          success: colors.green.accent3,
-        },
+        // dark: {
+        //   primary: colors.blue.darken2,
+        //   accent: colors.grey.darken3,
+        //   secondary: colors.amber.darken3,
+        //   info: colors.teal.lighten1,
+        //   warning: colors.amber.base,
+        //   error: colors.deepOrange.accent4,
+        //   success: colors.green.accent3,
+        // },
       },
     },
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    postcss : false,
+    postcss: false,
   },
 };
